@@ -4,6 +4,12 @@
 import redis
 
 
+def try_ignore(func, *args, **kwargs):
+    try:
+        func(*args, **kwargs)
+    except:
+        pass
+
 class Store(object):
     """Initialiaze redis store"""
 
@@ -40,6 +46,11 @@ class RedisKey(object):
     def _key(self, kwargs):
         return Store.prefix + ':' + self._tpl.format(**kwargs)
 
+    def _reset(self, key, exp=None):
+        expire = exp or self._expire
+        if expire is not None:
+            try_ignore(Store.client.expire, key, int(expire))
+
     def ttl(self, **kwargs):
         return Store.client.ttl(self._key(kwargs))
 
@@ -71,10 +82,52 @@ class RedisKey(object):
 
 
 class RedisList(RedisKey):
-    pass
+    def lrange(self, l, r, **kwargs):
+        return Store.client.lrange(self._key(kwargs), l, r)
+
+    async def lrangeAsync(self, l, r, **kwargs):
+        return Store.client.lrange(self._key(kwargs), l, r)
+
+    def rpush(self, value, **kwargs):
+        return Store.client.rpush(self._key(kwargs), value)
+
+    async def rpushAsync(self, value, **kwargs):
+        return Store.client.rpush(self._key(kwargs), value)
+
+    def lrem(self, value, count=1, **kwargs):
+        return Store.client.lrem(self._key(kwargs), value, count)
+
+    async def lrem(self, value, count=1, **kwargs):
+        return Store.client.lrem(self._key(kwargs), value, count)
+
+
 
 class RedisString(RedisKey):
-    pass
+    def get(self, **kwargs):
+        return Store.client.get(self._key(kwargs))
+
+    def getAsync(self, **kwargs):
+        return Store.client.get(self._key(kwargs))
+
+    def set(self, value, **kwargs):
+        extra = []
+        if self._expire is not None:
+            extra = ['EX', self._expire]
+        return Store.client.set(self._key(kwargs), value, *extra)
+
+    def setnx(self, value, **kwargs):
+        extra = []
+        if self._expire is not None:
+            extra = ['EX', self._expire]
+
+        return Store.client.setnx(self._key(kwargs), value, *extra)
+
+    async def setAsync(self, value, **kwargs):
+        return self.set(value, **kwargs)
+
+    async def setnxAsync(self, value, **kwargs):
+        return self.setnx(value, **kwargs)
+
 
 class RedisSet(RedisKey):
     pass
@@ -99,11 +152,12 @@ class RedisHash(RedisKey):
 
 
     def hmset(self, value, **kwargs):
-        Store.client.hmset(self._key(kwargs), value)
+        key = self._key(kwargs)
+        Store.client.hmset(key, value)
+        self._reset(key)
 
     async def hmsetAsync(self, value, **kwargs):
-        Store.client.hmset(self._key(kwargs), value)
-
+        self.hmset(value, **kwargs)
 
     def hsetnx(self, field, value, **kwargs):
         return Store.client.hsetnx(self._key(kwargs), field, value)
