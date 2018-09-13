@@ -6,7 +6,7 @@ A simple redis async wrapper for python3
 
 
 ## NOTE:
-Not all redis command are covered yet. Please use it after release `0.1.0`.
+Not all redis commands are covered yet. Please use it after release `0.1.0`.
 
 ## Setup & Install
 

@@ -21,7 +21,7 @@ setup(
     long_description_content_type='text/markdown',
     classifiers=[
         'License :: OSI Approved :: MIT License',
-        'Topic :: Internet :: WWW/HTTP :: Redis',
+        'Topic :: Database',
         'Programming Language :: Python :: 3',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
