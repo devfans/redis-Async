@@ -16,7 +16,7 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='redis_async',
     version=redis_async.__VERSION__,
-    description="Simple redis async wrapper for python3",
+    description="Redis data access layer design, a simple redis async wrapper for python3",
     long_description=long_description,
     long_description_content_type='text/markdown',
     classifiers=[
