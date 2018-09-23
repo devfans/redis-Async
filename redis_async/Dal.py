@@ -91,6 +91,9 @@ class RedisList(RedisKey):
     def rpush(self, value, **kwargs):
         return Store.client.rpush(self._key(kwargs), value)
 
+    def lpush(self, value, **kwargs):
+        return Store.client.lpush(self._key(kwargs), value)
+
     async def rpushAsync(self, value, **kwargs):
         return Store.client.rpush(self._key(kwargs), value)
 
