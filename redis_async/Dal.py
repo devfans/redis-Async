@@ -136,7 +136,76 @@ class RedisSet(RedisKey):
     pass
 
 class RedisSSet(RedisKey):
-    pass
+    def zadd(self, *args, **kwargs):
+        return Store.client.zadd(self._key(kwargs), *args)
+
+    def zcard(self, **kwargs):
+        return Store.client.zcard(self._key(kwargs))
+
+    def zcount(self, l, r, **kwargs):
+        return Store.client.zcount(self._key(kwargs), l, r)
+
+    def zincreby(self, score, value, **kwargs):
+        return Store.client.zincreby(self._key(kwargs), score, value)
+
+    def zscore(self, value, **kwargs):
+        return Store.client.zscore(self._key(kwargs), value)
+    
+    def zrank(self, value, **kwargs):
+        return Store.client.zrank(self._key(kwargs), value)
+
+    def zrevrank(self, value, **kwargs):
+        return Store.client.zrevrank(self._key(kwargs), value)
+
+    def zrange(self, l, r, score=False, **kwargs):
+        args = [l, r, 'WITHSCORES'] if score else [l, r]
+        return Store.client.zrange(self._key(kwargs), *args)
+
+    def zrevrange(self, l, r, score=False, **kwargs):
+        args = [l, r, 'WITHSCORES'] if score else [l, r]
+        return Store.client.zrevrange(self._key(kwargs), *args)
+
+    def zrangebylex(self, l, r, limit=0, **kwargs):
+        args = [l, r, 'LIMIT', limit] if limit > 0 else [l, r]
+        return Store.client.zrangebylex(self._key(kwargs), *args)
+
+    def zrevrangebylex(self, l, r, limit=0, **kwargs):
+        args = [l, r, 'LIMIT', limit] if limit > 0 else [l, r]
+        return Store.client.zrevrangebylex(self._key(kwargs), *args)
+
+    def zrangebyscore(self, l, r, limit=0, score=False, **kwargs):
+        args = [l, r]
+        if limit > 0:
+            args += ['LIMIT', limit]
+        if score:
+            args.append('WITHSCORES')
+        return Store.client.zrangebyscore(self._key(kwargs), *args)
+
+    def zrevrangebyscore(self, l, r, limit=0, score=False, **kwargs):
+        args = [l, r]
+        if limit > 0:
+            args += ['LIMIT', limit]
+        if score:
+            args.append('WITHSCORES')
+        return Store.client.zrevrangebyscore(self._key(kwargs), *args)
+
+    def zrem(self, *args, **kwargs):
+        return Store.client.zrem(self._key(kwargs), *args)
+
+    def zremrangebylex(self, l, r, **kwargs):
+        return Store.client.zremrangebylex(self._key(kwargs), l, r)
+
+    def zremrangebyrank(self, l, r, **kwargs):
+        return Store.client.zremrangebyrank(self._key(kwargs), l, r)
+
+    def zremrangebyscore(self, l, r, **kwargs):
+        return Store.client.zremrangebyscore(self._key(kwargs), l, r)
+
+    def zpopmax(self, count=1, **kwargs):
+        return Store.client.zpopmax(self._key(kwargs), count)
+
+    def zpopmin(self, count=1, **kwargs):
+        return Store.client.zpopmin(self._key(kwargs), count)
 
 
 class RedisHash(RedisKey):
