@@ -157,37 +157,23 @@ class RedisSSet(RedisKey):
     def zrevrank(self, value, **kwargs):
         return Store.client.zrevrank(self._key(kwargs), value)
 
-    def zrange(self, l, r, score=False, **kwargs):
-        args = [l, r, 'WITHSCORES'] if score else [l, r]
-        return Store.client.zrange(self._key(kwargs), *args)
+    def zrange(self, l, r, withscores=False, **kwargs):
+        return Store.client.zrange(self._key(kwargs), l, r, withscores=withscores)
 
-    def zrevrange(self, l, r, score=False, **kwargs):
-        args = [l, r, 'WITHSCORES'] if score else [l, r]
-        return Store.client.zrevrange(self._key(kwargs), *args)
+    def zrevrange(self, l, r, withscores=False, **kwargs):
+        return Store.client.zrevrange(self._key(kwargs), l, r, withscores=withscores)
 
-    def zrangebylex(self, l, r, offset=0, limit=0, **kwargs):
-        args = [l, r, 'LIMIT', offset, limit] if limit > 0 else [l, r]
-        return Store.client.zrangebylex(self._key(kwargs), *args)
+    def zrangebylex(self, l, r, start=None, num=None, **kwargs):
+        return Store.client.zrangebylex(self._key(kwargs), l, r, start=start, num=num)
 
-    def zrevrangebylex(self, l, r, offset=0, limit=0, **kwargs):
-        args = [l, r, 'LIMIT', offset, limit] if limit > 0 else [l, r]
-        return Store.client.zrevrangebylex(self._key(kwargs), *args)
+    def zrevrangebylex(self, l, r, start=None, num=None, **kwargs):
+        return Store.client.zrevrangebylex(self._key(kwargs), l, r, start=start, num=num)
 
-    def zrangebyscore(self, l, r, score=False, offset=0, limit=0, **kwargs):
-        args = [l, r]
-        if limit > 0:
-            args += ['LIMIT', offset, limit]
-        if score:
-            args.append('WITHSCORES')
-        return Store.client.zrangebyscore(self._key(kwargs), *args)
+    def zrangebyscore(self, l, r, withscores=False, start=None, num=None, **kwargs):
+        return Store.client.zrangebyscore(self._key(kwargs), l, r, start=start, num=num, withscores=withscores)
 
-    def zrevrangebyscore(self, l, r, score=False, offset=0, limit=0, **kwargs):
-        args = [l, r]
-        if limit > 0:
-            args += ['LIMIT', offset, limit]
-        if score:
-            args.append('WITHSCORES')
-        return Store.client.zrevrangebyscore(self._key(kwargs), *args)
+    def zrevrangebyscore(self, l, r, withscores=False, start=None, num=None, **kwargs):
+        return Store.client.zrevrangebyscore(self._key(kwargs), l, r, start=start, num=num, withscores=withscores)
 
     def zrem(self, *args, **kwargs):
         return Store.client.zrem(self._key(kwargs), *args)
