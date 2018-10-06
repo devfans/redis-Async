@@ -165,26 +165,26 @@ class RedisSSet(RedisKey):
         args = [l, r, 'WITHSCORES'] if score else [l, r]
         return Store.client.zrevrange(self._key(kwargs), *args)
 
-    def zrangebylex(self, l, r, limit=0, **kwargs):
-        args = [l, r, 'LIMIT', limit] if limit > 0 else [l, r]
+    def zrangebylex(self, l, r, offset=0, limit=0, **kwargs):
+        args = [l, r, 'LIMIT', offset, limit] if limit > 0 else [l, r]
         return Store.client.zrangebylex(self._key(kwargs), *args)
 
-    def zrevrangebylex(self, l, r, limit=0, **kwargs):
-        args = [l, r, 'LIMIT', limit] if limit > 0 else [l, r]
+    def zrevrangebylex(self, l, r, offset=0, limit=0, **kwargs):
+        args = [l, r, 'LIMIT', offset, limit] if limit > 0 else [l, r]
         return Store.client.zrevrangebylex(self._key(kwargs), *args)
 
-    def zrangebyscore(self, l, r, limit=0, score=False, **kwargs):
+    def zrangebyscore(self, l, r, score=False, offset=0, limit=0, **kwargs):
         args = [l, r]
         if limit > 0:
-            args += ['LIMIT', limit]
+            args += ['LIMIT', offset, limit]
         if score:
             args.append('WITHSCORES')
         return Store.client.zrangebyscore(self._key(kwargs), *args)
 
-    def zrevrangebyscore(self, l, r, limit=0, score=False, **kwargs):
+    def zrevrangebyscore(self, l, r, score=False, offset=0, limit=0, **kwargs):
         args = [l, r]
         if limit > 0:
-            args += ['LIMIT', limit]
+            args += ['LIMIT', offset, limit]
         if score:
             args.append('WITHSCORES')
         return Store.client.zrevrangebyscore(self._key(kwargs), *args)
