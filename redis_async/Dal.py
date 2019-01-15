@@ -93,6 +93,24 @@ class RedisList(RedisKey):
 
     def lpush(self, value, **kwargs):
         return Store.client.lpush(self._key(kwargs), value)
+    
+    def rpop(self, **kwargs):
+        return Store.client.rpop(self._key(kwargs))
+
+    def lpop(self, **kwargs):
+        return Store.client.lpop(self._key(kwargs))
+ 
+    def brpop(self, **kwargs):
+        return Store.client.brpop(self._key(kwargs))
+
+    def blpop(self, **kwargs):
+        return Store.client.blpop(self._key(kwargs))
+    
+    def lindex(self, index, **kwargs):
+        return Store.client.lindex(self._key(kwargs), index)
+ 
+    def llen(self, **kwargs):
+        return Store.client.llen(self._key(kwargs))
 
     async def rpushAsync(self, value, **kwargs):
         return Store.client.rpush(self._key(kwargs), value)
@@ -102,7 +120,6 @@ class RedisList(RedisKey):
 
     async def lrem(self, value, count=1, **kwargs):
         return Store.client.lrem(self._key(kwargs), value, count)
-
 
 
 class RedisString(RedisKey):
@@ -133,7 +150,24 @@ class RedisString(RedisKey):
 
 
 class RedisSet(RedisKey):
-    pass
+    def sadd(self, value, **kwargs):
+        return Store.client.sadd(self._key(kwargs), value)
+    
+    def scard(self, value, **kwargs):
+        return Store.client.scard(self._key(kwargs), value)
+
+    def sismember(self, value, **kwargs):
+        return Store.client.sismember(self._key(kwargs), value)
+
+    def smembers(self, **kwargs):
+        return Store.client.smembers(self._key(kwargs))
+    
+    def spop(self, count=1, **kwargs):
+        return Store.client.spop(self._key(kwargs), count)
+
+    def srem(self, value, **kwargs):
+        return Store.client.srem(self._key(kwargs), value)
+
 
 class RedisSSet(RedisKey):
     def zadd(self, *args, **kwargs):
@@ -199,7 +233,10 @@ class RedisHash(RedisKey):
     def hget(self, field, **kwargs):
         return Store.client.hget(self._key(kwargs), field)
 
-    async def hget(self, field, **kwargs):
+    def hdel(self, field, **kwargs):
+        return Store.client.hdel(self._key(kwargs), field)
+
+    async def hgetAsync(self, field, **kwargs):
         return Store.client.hget(self._key(kwargs), field)
 
     def hset(self, field, value, **kwargs):
