@@ -130,17 +130,17 @@ class RedisString(RedisKey):
         return Store.client.get(self._key(kwargs))
 
     def set(self, value, **kwargs):
-        extra = []
+        extra = {}
         if self._expire is not None:
-            extra = ['EX', self._expire]
-        return Store.client.set(self._key(kwargs), value, *extra)
+            extra['ex'] = self._expire
+        return Store.client.set(self._key(kwargs), value, **extra)
 
     def setnx(self, value, **kwargs):
-        extra = []
+        extra = {}
         if self._expire is not None:
-            extra = ['EX', self._expire]
+            extra['ex'] = self._expire
 
-        return Store.client.setnx(self._key(kwargs), value, *extra)
+        return Store.client.setnx(self._key(kwargs), value, **extra)
 
     async def setAsync(self, value, **kwargs):
         return self.set(value, **kwargs)
